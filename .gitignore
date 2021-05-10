@@ -1,0 +1,10 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs/leta
+/leta.webApp/bin/Debug/net5.0
+/leta.webApp/obj/Debug/net5.0/RazorDeclaration/leta.webApp.dll
+/leta.webApp/obj/Debug/net5.0/RazorDeclaration/leta.webApp.pdb
+/leta.webApp/obj/Debug/net5.0/ref
+/leta.webApp/obj
