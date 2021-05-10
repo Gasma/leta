@@ -1,13 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace leta.webApp.Data
 {
-    public class letaAppContext : DbContext
+    public class LetaAppContext : DbContext
     {
-
+        public LetaAppContext(DbContextOptions<LetaAppContext> options) : base(options)
+        {
+        }
+        public DbSet<RouteTime> RouteTime { get; set; }
     }
 }
