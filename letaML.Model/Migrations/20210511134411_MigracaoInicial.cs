@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace leta.Model.Migrations
 {
-    public partial class InitialMigration : Migration
+    public partial class MigracaoInicial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -17,11 +17,10 @@ namespace leta.Model.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    DiaDoMes = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    HoraDoDia = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     DiaDaSemana = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Tempo = table.Column<int>(type: "int", nullable: false),
-                    HoraDoDia = table.Column<TimeSpan>(type: "time(6)", nullable: false)
+                    Tempo = table.Column<float>(type: "float", nullable: false)
                 },
                 constraints: table =>
                 {
