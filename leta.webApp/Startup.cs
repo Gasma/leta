@@ -1,15 +1,11 @@
-using leta.webApp.Data;
+using leta.Model;
+using leta.webApp;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace leta.webApp
 {
@@ -29,7 +25,7 @@ namespace leta.webApp
             services.AddRazorPages();
             services.AddServerSideBlazor();
             var connectionString = Configuration.GetConnectionString("DefaultConnection");
-            services.AddDbContext<LetaAppContext>(options =>
+            services.AddDbContext<LetaAppDbContext>(options =>
                 options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
         }
 

@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace leta.webApp.Migrations
+namespace leta.Model.Migrations
 {
     public partial class InitialMigration : Migration
     {
