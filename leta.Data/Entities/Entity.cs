@@ -2,6 +2,6 @@
 {
     public abstract class Entity<TPrimaryKey> : IEntity<TPrimaryKey>
     {
-        public TPrimaryKey Id { get; protected set; }
+        public TPrimaryKey Id { get; set; }
     }
 }

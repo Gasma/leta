@@ -9,7 +9,7 @@ using leta.Data;
 namespace leta.Data.Migrations
 {
     [DbContext(typeof(LetaAppDbContext))]
-    [Migration("20210511134411_MigracaoInicial")]
+    [Migration("20210512151534_Migracao-Inicial")]
     partial class MigracaoInicial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -17,7 +17,7 @@ namespace leta.Data.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 64)
-                .HasAnnotation("ProductVersion", "5.0.5");
+                .HasAnnotation("ProductVersion", "5.0.6");
 
             modelBuilder.Entity("leta.Data.RouteTime", b =>
                 {
@@ -25,8 +25,8 @@ namespace leta.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<string>("DiaDaSemana")
-                        .HasColumnType("longtext");
+                    b.Property<int>("DiaDaSemana")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("HoraDoDia")
                         .HasColumnType("datetime(6)");

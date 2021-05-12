@@ -4,6 +4,7 @@ using leta.webApp.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -30,30 +31,70 @@ namespace leta.webApp.Controllers
 
         public IActionResult AddData()
         {
+            //var listaDiaSemana = Enum.GetValues(typeof(DiaSemana));
             return View();
         }
 
         public JsonResult PopulaTabela()
         {
-            var dados = routeTimeRepository.GetAll().ToList();
+            var dados = routeTimeRepository
+                .GetAll()
+                .Select(a => new { a.Id, HoraDoDia = a.HoraDoDia.ToString("dd/MM/yyyy HH:mm"), DiaDaSemana = ((DiaSemana)a.DiaDaSemana).ToDescription(), a.Tempo });
 
             return Json(new { data = dados });
-            //return Json(new { draw = 1, recordsTotal = dados.Count(), recordsFiltered = dados.Count(), data = dados });
         }
 
         [HttpPost]
         public JsonResult SalvaUnicoRegistro(RouteTimeViewModel route)
         {
-            routeTimeRepository.Insert(new Data.RouteTime()
+            if (route.Id <= 0)
             {
-                DiaDaSemana = route.DiaDaSemana,
-                HoraDoDia = route.HoraDoDia,
-                Tempo = route.Tempo
-            });
-            if (unitOfWork.Commit())
-                return Json(new { sucess = true });
+                routeTimeRepository.Insert(new Data.RouteTime()
+                {
+                    DiaDaSemana = (int)route.DiaDaSemana.ParseToEnumDiaSemana(),
+                    HoraDoDia = route.HoraDoDia,
+                    Tempo = route.Tempo
+                });
+            }
             else
-                return Json(new { sucess = false });
+            {
+                routeTimeRepository.Update(new Data.RouteTime()
+                {
+                    Id = route.Id,
+                    DiaDaSemana = (int)route.DiaDaSemana.ParseToEnumDiaSemana(),
+                    HoraDoDia = route.HoraDoDia,
+                    Tempo = route.Tempo
+                });
+            }
+
+            if (unitOfWork.Commit())
+                return Json(new { success = true });
+            else
+                return Json(new { success = false });
+        }
+
+        [HttpPost]
+        public JsonResult ApagarRegistro(int id)
+        {
+            routeTimeRepository.Delete(id);
+            if (unitOfWork.Commit())
+                return Json(new { success = true });
+            else
+                return Json(new { success = false });
+        }        
+        
+        [HttpPost]
+        public JsonResult ApagarTodosRegistro()
+        {
+            var dados = routeTimeRepository.GetAll();
+            foreach (var item in dados)
+            {
+                routeTimeRepository.Delete(item.Id);
+            }
+            if (unitOfWork.Commit())
+                return Json(new { success = true });
+            else
+                return Json(new { success = false });
         }
 
         [HttpPost]
@@ -62,22 +103,34 @@ namespace leta.webApp.Controllers
             using (var csvreader = new StreamReader(Arquivo.OpenReadStream()))
                 while (!csvreader.EndOfStream)
                 {
-                    var line = csvreader.ReadLine();
-                    var values = line.Split(';');
+                    var linha = csvreader.ReadLine();
+                    var values = linha.Split(';');
+                    if (values.Length <= 1)
+                    {
+                        values = linha.Split(',');
+                    }
+                    try
+                    {
+                        values[0] = JsonConvert.DeserializeObject<string>(values[0]);
+                        values[1] = JsonConvert.DeserializeObject<string>(values[1]);
+                        values[2] = JsonConvert.DeserializeObject<string>(values[2]);
+                    }
+                    catch { }
+
                     if (int.TryParse(values[2], out int tempo) && DateTime.TryParse(values[0], out DateTime data))
                     {
                         routeTimeRepository.Insert(new Data.RouteTime()
                         {
                             HoraDoDia = data,
-                            DiaDaSemana = values[1],
+                            DiaDaSemana = (int)values[1].ParseToEnumDiaSemana(),
                             Tempo = tempo,
                         });
                     }
                 }
             if (unitOfWork.Commit())
-                return Json(new { sucess = true });
+                return Json(new { success = true });
             else
-                return Json(new { sucess = false });
+                return Json(new { success = false });
         }
 
         public IActionResult Predicao()

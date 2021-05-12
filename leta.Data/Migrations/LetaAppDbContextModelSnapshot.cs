@@ -15,7 +15,7 @@ namespace leta.Data.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 64)
-                .HasAnnotation("ProductVersion", "5.0.5");
+                .HasAnnotation("ProductVersion", "5.0.6");
 
             modelBuilder.Entity("leta.Data.RouteTime", b =>
                 {
@@ -23,8 +23,8 @@ namespace leta.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<string>("DiaDaSemana")
-                        .HasColumnType("longtext");
+                    b.Property<int>("DiaDaSemana")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("HoraDoDia")
                         .HasColumnType("datetime(6)");
