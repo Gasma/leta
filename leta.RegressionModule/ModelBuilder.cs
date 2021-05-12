@@ -6,7 +6,6 @@ using System.IO;
 using System.Linq;
 using Microsoft.ML;
 using Microsoft.ML.Data;
-using leta.Model;
 using Microsoft.ML.Transforms.TimeSeries;
 
 namespace leta.RegressionModule
@@ -14,7 +13,6 @@ namespace leta.RegressionModule
     public static class ModelBuilder
     {
         private static string TRAIN_DATA_FILEPATH = @"G:\Meu Drive\Documentos\Faculdade\TCC\Data.CSV";
-        private static string MODEL_FILE = ConsumeModel.MLNetModelPath;
 
         // Create MLContext to be shared across the model creation workflow objects 
         // Set a random seed for repeatable/deterministic results across multiple trainings.
@@ -23,12 +21,7 @@ namespace leta.RegressionModule
         public static void CreateModel()
         {
             // Load Data
-            IDataView trainingDataView = mlContext.Data.LoadFromTextFile<RouteTime>(
-                                            path: TRAIN_DATA_FILEPATH,
-                                            hasHeader: true,
-                                            separatorChar: ';',
-                                            allowQuoting: true,
-                                            allowSparse: false);
+            IDataView trainingDataView = null;
 
             // Build training pipeline
             IEstimator<ITransformer> trainingPipeline = BuildTrainingPipeline(mlContext);
