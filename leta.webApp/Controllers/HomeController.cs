@@ -6,11 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace leta.webApp.Controllers
 {
@@ -31,7 +29,6 @@ namespace leta.webApp.Controllers
 
         public IActionResult AddData()
         {
-            //var listaDiaSemana = Enum.GetValues(typeof(DiaSemana));
             return View();
         }
 

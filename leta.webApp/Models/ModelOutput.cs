@@ -7,6 +7,8 @@ namespace leta.Model
 {
     public class ModelOutput
     {
-        public float Score { get; set; }
+        public float[] MediaDeTempo { get; set; }
+        public float[] MaioresTempso { get; set; }
+        public float[] MenoresTempos { get; set; }
     }
 }

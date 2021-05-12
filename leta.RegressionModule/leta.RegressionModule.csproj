@@ -9,4 +9,8 @@
     <PackageReference Include="Microsoft.ML.TimeSeries" Version="1.5.5" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\leta.Data\leta.Data.csproj" />
+  </ItemGroup>
+
 </Project>
