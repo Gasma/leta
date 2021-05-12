@@ -5,10 +5,6 @@ namespace leta.Data
 {
     public class RouteTime : Entity<int>
     {
-        public RouteTime()
-        {
-
-        }
 
         public DateTime HoraDoDia { get; set; }
 
