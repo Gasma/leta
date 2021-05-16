@@ -1,6 +1,6 @@
 using System;
 
-namespace leta.webApp.Models
+namespace leta.Application.ViewModels
 {
     public class ErrorViewModel
     {

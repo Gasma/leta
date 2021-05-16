@@ -4,13 +4,10 @@
 
 /.vs/leta
 /leta.webApp/bin/Debug/net5.0
-/leta.webApp/obj/Debug/net5.0/RazorDeclaration/leta.webApp.dll
-/leta.webApp/obj/Debug/net5.0/RazorDeclaration/leta.webApp.pdb
-/leta.webApp/obj/Debug/net5.0/ref
 /leta.webApp/obj
-/leta.RegressionModule/bin/Debug/net5.0
-/leta.RegressionModule/obj
 /leta.webApp/leta.webApp.csproj.user
 
 /leta.Data/bin/Debug/net5.0
 /leta.Data/obj
+/leta.Application/bin/Debug/net5.0
+/leta.Application/obj

@@ -5,9 +5,9 @@ VisualStudioVersion = 16.0.31205.134
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "leta.Data", "leta.Data\leta.Data.csproj", "{8EEC0C0B-047F-4D8B-B213-BF69E678F424}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "leta.RegressionModule", "leta.RegressionModule\leta.RegressionModule.csproj", "{DACE9267-5907-498C-8300-21195A16F71F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "leta.Application", "leta.Application\leta.Application.csproj", "{DACE9267-5907-498C-8300-21195A16F71F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "leta.webApp", "leta.webApp\leta.webApp.csproj", "{AFA6F152-A0CB-4C5E-B4F3-5A92A079064B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "leta.webApp", "leta.webApp\leta.webApp.csproj", "{AFA6F152-A0CB-4C5E-B4F3-5A92A079064B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

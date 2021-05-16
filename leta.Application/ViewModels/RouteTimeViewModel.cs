@@ -1,7 +1,7 @@
 ﻿using Microsoft.ML.Data;
 using System;
 
-namespace leta.webApp.Models
+namespace leta.Application.ViewModels
 {
     public class RouteTimeViewModel
     {
@@ -11,8 +11,7 @@ namespace leta.webApp.Models
         public DateTime HoraDoDia { get; set; }
 
         [ColumnName("Dia semana"), LoadColumn(1)]
-        public string DiaDaSemana { get; set; }
-
+        public int DiaDaSemana { get; set; }
 
         [ColumnName("Tempo Min"), LoadColumn(2)]
         public float Tempo { get; set; }

@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\leta.Application\leta.Application.csproj" />
     <ProjectReference Include="..\leta.Data\leta.Data.csproj" />
   </ItemGroup>
 

@@ -1,6 +1,6 @@
-﻿using leta.Data.Repository;
+﻿using leta.Application.ViewModels;
+using leta.Data.Repository;
 using leta.Data.UoW;
-using leta.webApp.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -48,7 +48,7 @@ namespace leta.webApp.Controllers
             {
                 routeTimeRepository.Insert(new Data.RouteTime()
                 {
-                    DiaDaSemana = (int)route.DiaDaSemana.ParseToEnumDiaSemana(),
+                    DiaDaSemana = route.DiaDaSemana,
                     HoraDoDia = route.HoraDoDia,
                     Tempo = route.Tempo
                 });
@@ -58,7 +58,7 @@ namespace leta.webApp.Controllers
                 routeTimeRepository.Update(new Data.RouteTime()
                 {
                     Id = route.Id,
-                    DiaDaSemana = (int)route.DiaDaSemana.ParseToEnumDiaSemana(),
+                    DiaDaSemana = route.DiaDaSemana,
                     HoraDoDia = route.HoraDoDia,
                     Tempo = route.Tempo
                 });

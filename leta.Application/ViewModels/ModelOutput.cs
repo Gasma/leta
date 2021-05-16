@@ -3,7 +3,7 @@
 using System;
 using Microsoft.ML.Data;
 
-namespace leta.Model
+namespace leta.Application.ViewModels
 {
     public class ModelOutput
     {

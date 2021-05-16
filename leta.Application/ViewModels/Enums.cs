@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 
-namespace leta.webApp.Models
+namespace leta.Application.ViewModels
 {
     public static class Enums
     {
