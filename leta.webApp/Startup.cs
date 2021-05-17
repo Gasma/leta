@@ -1,3 +1,4 @@
+using leta.Application.RegressionModel;
 using leta.Data;
 using leta.Data.Repository;
 using leta.Data.UoW;
@@ -29,6 +30,7 @@ namespace leta.webApp
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IRouteTimeRepository, RouteTimeRepository>();
+            services.AddScoped<ITrainTimeSeriesRegressionModel, TrainTimeSeriesRegressionModel>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

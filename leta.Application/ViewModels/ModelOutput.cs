@@ -8,7 +8,7 @@ namespace leta.Application.ViewModels
     public class ModelOutput
     {
         public float[] MediaDeTempo { get; set; }
-        public float[] MaioresTempso { get; set; }
-        public float[] MenoresTempos { get; set; }
+        //public float[] MaioresTempos { get; set; }
+        //public float[] MenoresTempos { get; set; }
     }
 }

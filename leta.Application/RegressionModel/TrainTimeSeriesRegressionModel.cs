@@ -4,20 +4,20 @@ using Microsoft.ML;
 using Microsoft.ML.Transforms.TimeSeries;
 using System.Linq;
 
-namespace leta.Application
+namespace leta.Application.RegressionModel
 {
-    public class TrainModel
+    public class TrainTimeSeriesRegressionModel : ITrainTimeSeriesRegressionModel
     {
         private readonly IRouteTimeRepository routeTimeRepository;
-        public TrainModel(IRouteTimeRepository routeTimeRepository)
+        public TrainTimeSeriesRegressionModel(IRouteTimeRepository routeTimeRepository)
         {
             this.routeTimeRepository = routeTimeRepository;
         }
         public ModelOutput Treinamento()
         {
+            var dados = routeTimeRepository.GetAll();
             var dataset = routeTimeRepository.GetAll().Select(a => new RouteTimeViewModel() 
             { 
-                Id = a.Id,
                 DiaDaSemana = a.DiaDaSemana,
                 HoraDoDia = a.HoraDoDia,
                 Tempo = a.Tempo
@@ -25,12 +25,12 @@ namespace leta.Application
             var context = new MLContext();
             var data = context.Data.LoadFromEnumerable(dataset);
             var pipeline = context.Forecasting.ForecastBySsa(
-                "TempoTotal", 
+                "MediaDeTempo", 
                 nameof(RouteTimeViewModel.Tempo), 
-                windowSize: 5,
-                seriesLength: 10,
-                trainSize:100,
-                horizon:4);
+                windowSize: 2,
+                seriesLength: 7,
+                trainSize: dataset.Count(),
+                horizon:1);
             var model = pipeline.Fit(data);
             var forecastingTempo = model.CreateTimeSeriesEngine<RouteTimeViewModel, ModelOutput>(context);
             var tempos = forecastingTempo.Predict();
