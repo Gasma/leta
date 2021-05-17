@@ -1,3 +1,4 @@
+using leta.Application.Helper;
 using leta.Application.RouteTimeModel;
 using leta.Data;
 using leta.Data.Repository;
@@ -28,10 +29,11 @@ namespace leta.webApp
             services.AddDbContext<LetaAppDbContext>(options =>
                 options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
+            services.Configure<AppSettings>(Configuration.GetSection("OptionsConfiguration"));
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IRouteTimeRepository, RouteTimeRepository>();
             services.AddScoped<IRouteTimeModel, RouteTimeModel>();
-            services.AddScoped<IModelBuilder, ConsumeModelBuilder>();
+            services.AddScoped<IConsumeModelBuilder, ConsumeModelBuilder>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

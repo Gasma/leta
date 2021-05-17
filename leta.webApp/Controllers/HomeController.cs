@@ -19,16 +19,20 @@ namespace leta.webApp.Controllers
         private readonly IRouteTimeRepository routeTimeRepository;
         private readonly IUnitOfWork unitOfWork;
         private readonly IRouteTimeModel routeTimeModel;
+        private readonly IConsumeModelBuilder consumeModelBuilder;
+
 
         public HomeController(ILogger<HomeController> logger,
             IRouteTimeRepository routeTimeRepository,
             IUnitOfWork unitOfWork,
-            IRouteTimeModel routeTimeModel)
+            IRouteTimeModel routeTimeModel,
+            IConsumeModelBuilder consumeModelBuilder)
         {
             this.logger = logger;
             this.routeTimeRepository = routeTimeRepository;
             this.unitOfWork = unitOfWork;
             this.routeTimeModel = routeTimeModel;
+            this.consumeModelBuilder = consumeModelBuilder;
         }
 
         public IActionResult AddData()
@@ -136,8 +140,17 @@ namespace leta.webApp.Controllers
 
         public IActionResult Predicao()
         {
-
             return View();
+        }        
+        
+        public JsonResult TreinarModel()
+        {
+            return Json(new { success = true, message = consumeModelBuilder.CreateModel() });
+        }        
+        
+        public JsonResult ConsumirModel(RouteTimeViewModel route)
+        {
+            return Json(new { success = true, message = routeTimeModel.Predict(route) });
         }
 
         public IActionResult Index()
