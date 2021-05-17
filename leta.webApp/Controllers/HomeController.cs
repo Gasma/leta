@@ -1,4 +1,4 @@
-﻿using leta.Application.RegressionModel;
+﻿using leta.Application.RouteTimeModel;
 using leta.Application.ViewModels;
 using leta.Data.Repository;
 using leta.Data.UoW;
@@ -18,17 +18,17 @@ namespace leta.webApp.Controllers
         private readonly ILogger<HomeController> logger;
         private readonly IRouteTimeRepository routeTimeRepository;
         private readonly IUnitOfWork unitOfWork;
-        private readonly ITrainTimeSeriesRegressionModel trainTimeSeriesRegressionModel;
+        private readonly IRouteTimeModel routeTimeModel;
 
         public HomeController(ILogger<HomeController> logger,
             IRouteTimeRepository routeTimeRepository,
             IUnitOfWork unitOfWork,
-            ITrainTimeSeriesRegressionModel trainTimeSeriesRegressionModel)
+            IRouteTimeModel routeTimeModel)
         {
             this.logger = logger;
             this.routeTimeRepository = routeTimeRepository;
             this.unitOfWork = unitOfWork;
-            this.trainTimeSeriesRegressionModel = trainTimeSeriesRegressionModel;
+            this.routeTimeModel = routeTimeModel;
         }
 
         public IActionResult AddData()
@@ -136,9 +136,8 @@ namespace leta.webApp.Controllers
 
         public IActionResult Predicao()
         {
-            var result = trainTimeSeriesRegressionModel.Treinamento();
 
-            return View(result);
+            return View();
         }
 
         public IActionResult Index()

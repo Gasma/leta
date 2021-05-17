@@ -1,29 +1,10 @@
-﻿@model leta.Application.ViewModels.ModelOutput
-
-<h4>Adiciona Registros</h4>
+﻿<h4>Adiciona Registros</h4>
 <hr />
 <div class="row">
     <div class="col-md-6" id="list" style="border-right:1px solid">
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title">Base de dados</h5>
-                <table id="tabela" class="table table-hover table-striped table-bordered nowrap" style="width:100% !important">
-                    <thead>
-                        <tr>
-                            <th>Tempo</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    @foreach (var item in Model.MediaDeTempo)
-                    {
-                        <tr>
-                            <td>
-                                @item
-                            </td>
-                        </tr>
-                    }
-                    </tbody>
-                </table>
             </div>
         </div>
     </div>
