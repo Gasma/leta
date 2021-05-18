@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using leta.Data.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace leta.Data
 {
@@ -8,5 +9,6 @@ namespace leta.Data
         {
         }
         public DbSet<RouteTime> RouteTime { get; set; }
+        public DbSet<InfoModelo> InfoModelo { get; set; }
     }
 }

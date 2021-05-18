@@ -22,15 +22,24 @@ namespace leta.Application.RouteTimeModel
         // Method for consuming model in your app
         public RouteTimeModelOutput Predict(RouteTimeViewModel viewModel)
         {
-            var input = new RouteTimeModelInput() {
+            var input = new RouteTimeModelInput()
+            {
                 Ano = int.TryParse(viewModel.HoraDoDia.ToString("yy"), out int ano) ? ano : 0,
-                DiaSemana = viewModel.DiaDaSemana,
+                DiaSemana = (int)viewModel.HoraDoDia.DayOfWeek,
                 Hora = viewModel.HoraDoDia.Hour,
                 Mes = int.TryParse(viewModel.HoraDoDia.ToString("MM"), out int mes) ? mes : 0,
                 Tempo = viewModel.Tempo
             };
-            PredictionEngine = new Lazy<PredictionEngine<RouteTimeModelInput, RouteTimeModelOutput>>(CreatePredictionEngine);
-            RouteTimeModelOutput result = PredictionEngine.Value.Predict(input);
+            RouteTimeModelOutput result;
+            try
+            {
+                PredictionEngine = new Lazy<PredictionEngine<RouteTimeModelInput, RouteTimeModelOutput>>(CreatePredictionEngine);
+                result = PredictionEngine.Value.Predict(input);
+            }
+            catch (NullReferenceException)
+            {
+                result = new RouteTimeModelOutput() { Score = 0 };
+            }
             return result;
         }
 
@@ -38,11 +47,15 @@ namespace leta.Application.RouteTimeModel
         {
             // Create new MLContext
             MLContext mlContext = new MLContext();
+            PredictionEngine<RouteTimeModelInput, RouteTimeModelOutput> predEngine = null;
+            try
+            {
+                // Load model & create prediction engine
+                ITransformer mlModel = mlContext.Model.Load(MLNetModelPath, out var modelInputSchema);
+                predEngine = mlContext.Model.CreatePredictionEngine<RouteTimeModelInput, RouteTimeModelOutput>(mlModel);
 
-            // Load model & create prediction engine
-            ITransformer mlModel = mlContext.Model.Load(MLNetModelPath, out var modelInputSchema);
-            var predEngine = mlContext.Model.CreatePredictionEngine<RouteTimeModelInput, RouteTimeModelOutput>(mlModel);
-
+            }
+            catch { }
             return predEngine;
         }
     }

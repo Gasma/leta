@@ -4,7 +4,6 @@ using leta.Data.Repository;
 using Microsoft.Extensions.Options;
 using Microsoft.ML;
 using Microsoft.ML.Data;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -63,36 +62,26 @@ namespace leta.Application.RouteTimeModel
             // Set the training algorithm 
             var trainer = mlContext.Regression.Trainers.FastTreeTweedie(labelColumnName: @"Tempo", featureColumnName: "Features");
 
-            var trainingPipeline = dataProcessPipeline.Append(trainer);
-
-            return trainingPipeline;
+            return dataProcessPipeline.Append(trainer);
         }
 
         public ITransformer TrainModel(MLContext mlContext, IDataView trainingDataView, IEstimator<ITransformer> trainingPipeline)
         {
-            message.Append("=============== Training  model ===============");
-
-            ITransformer model = trainingPipeline.Fit(trainingDataView);
-
-            message.Append("=============== End of training process ===============");
-            return model;
+            return trainingPipeline.Fit(trainingDataView);
         }
 
         private void Evaluate(MLContext mlContext, IDataView trainingDataView, IEstimator<ITransformer> trainingPipeline)
         {
             // Cross-Validate with single dataset (since we don't have two datasets, one for training and for evaluate)
             // in order to evaluate and get the model's accuracy metrics
-            message.Append("=============== Cross-validating to get model's accuracy metrics ===============");
-            var crossValidationResults = mlContext.Regression.CrossValidate(trainingDataView, trainingPipeline, numberOfFolds: 5, labelColumnName: "tempo");
+            var crossValidationResults = mlContext.Regression.CrossValidate(trainingDataView, trainingPipeline, numberOfFolds: 5, labelColumnName: "Tempo");
             PrintRegressionFoldsAverageMetrics(crossValidationResults);
         }
 
         private void SaveModel(MLContext mlContext, ITransformer mlModel, string modelRelativePath, DataViewSchema modelInputSchema)
         {
             // Save/persist the trained model to a .ZIP file
-            message.Append("=============== Saving the model  ===============");
             mlContext.Model.Save(mlModel, modelInputSchema, GetAbsolutePath(modelRelativePath));
-            message.Append($"The model is saved to {GetAbsolutePath(modelRelativePath)}");
         }
 
         public string GetAbsolutePath(string relativePath)
@@ -107,15 +96,15 @@ namespace leta.Application.RouteTimeModel
 
         public void PrintRegressionMetrics(RegressionMetrics metrics)
         {
-            message.Append($"*************************************************");
-            message.Append($"*       Metrics for Regression model      ");
-            message.Append($"*------------------------------------------------");
-            message.Append($"*       LossFn:        {metrics.LossFunction:0.##}");
-            message.Append($"*       R2 Score:      {metrics.RSquared:0.##}");
-            message.Append($"*       Absolute loss: {metrics.MeanAbsoluteError:#.##}");
-            message.Append($"*       Squared loss:  {metrics.MeanSquaredError:#.##}");
-            message.Append($"*       RMS loss:      {metrics.RootMeanSquaredError:#.##}");
-            message.Append($"*************************************************");
+            message.Append($"*************************************************#");
+            message.Append($"*       Metrics for Regression model      #");
+            message.Append($"*------------------------------------------------#");
+            message.Append($"*       LossFn:        {metrics.LossFunction:0.##}#");
+            message.Append($"*       R2 Score:      {metrics.RSquared:0.##}#");
+            message.Append($"*       Absolute loss: {metrics.MeanAbsoluteError:#.##}#");
+            message.Append($"*       Squared loss:  {metrics.MeanSquaredError:#.##}#");
+            message.Append($"*       RMS loss:      {metrics.RootMeanSquaredError:#.##}#");
+            message.Append($"*************************************************#");
         }
 
         public void PrintRegressionFoldsAverageMetrics(IEnumerable<TrainCatalogBase.CrossValidationResult<RegressionMetrics>> crossValidationResults)
@@ -126,15 +115,12 @@ namespace leta.Application.RouteTimeModel
             var lossFunction = crossValidationResults.Select(r => r.Metrics.LossFunction);
             var R2 = crossValidationResults.Select(r => r.Metrics.RSquared);
 
-            message.Append($"*************************************************************************************************************");
-            message.Append($"*       Metrics for Regression model      ");
-            message.Append($"*------------------------------------------------------------------------------------------------------------");
-            message.Append($"*       Average L1 Loss:       {L1.Average():0.###} ");
-            message.Append($"*       Average L2 Loss:       {L2.Average():0.###}  ");
-            message.Append($"*       Average RMS:           {RMS.Average():0.###}  ");
-            message.Append($"*       Average Loss Function: {lossFunction.Average():0.###}  ");
-            message.Append($"*       Average R-squared:     {R2.Average():0.###}  ");
-            message.Append($"*************************************************************************************************************");
+            message.Append($"*       Metrics for Regression model      #");
+            message.Append($"*       Average L1 Loss:       {L1.Average():0.###} #");
+            message.Append($"*       Average L2 Loss:       {L2.Average():0.###}  #");
+            message.Append($"*       Average RMS:           {RMS.Average():0.###}  #");
+            message.Append($"*       Average Loss Function: {lossFunction.Average():0.###}  #");
+            message.Append($"*       Average R-squared:     {R2.Average():0.###}  #");
         }
     }
 }

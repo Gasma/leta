@@ -32,6 +32,7 @@ namespace leta.webApp
             services.Configure<AppSettings>(Configuration.GetSection("OptionsConfiguration"));
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IRouteTimeRepository, RouteTimeRepository>();
+            services.AddScoped<IInfoModeloRepository, InfoModeloRepository>();
             services.AddScoped<IRouteTimeModel, RouteTimeModel>();
             services.AddScoped<IConsumeModelBuilder, ConsumeModelBuilder>();
         }

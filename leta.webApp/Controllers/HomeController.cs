@@ -20,21 +20,24 @@ namespace leta.webApp.Controllers
         private readonly IUnitOfWork unitOfWork;
         private readonly IRouteTimeModel routeTimeModel;
         private readonly IConsumeModelBuilder consumeModelBuilder;
-
+        private readonly IInfoModeloRepository infoModeloRepository;
 
         public HomeController(ILogger<HomeController> logger,
             IRouteTimeRepository routeTimeRepository,
             IUnitOfWork unitOfWork,
             IRouteTimeModel routeTimeModel,
-            IConsumeModelBuilder consumeModelBuilder)
+            IConsumeModelBuilder consumeModelBuilder,
+            IInfoModeloRepository infoModeloRepository)
         {
             this.logger = logger;
             this.routeTimeRepository = routeTimeRepository;
+            this.infoModeloRepository = infoModeloRepository;
             this.unitOfWork = unitOfWork;
             this.routeTimeModel = routeTimeModel;
             this.consumeModelBuilder = consumeModelBuilder;
         }
 
+        #region Adiciona Dados
         public IActionResult AddData()
         {
             return View();
@@ -56,7 +59,7 @@ namespace leta.webApp.Controllers
             {
                 routeTimeRepository.Insert(new Data.RouteTime()
                 {
-                    DiaDaSemana = route.DiaDaSemana,
+                    DiaDaSemana = (int)route.HoraDoDia.DayOfWeek,
                     HoraDoDia = route.HoraDoDia,
                     Tempo = route.Tempo
                 });
@@ -66,7 +69,7 @@ namespace leta.webApp.Controllers
                 routeTimeRepository.Update(new Data.RouteTime()
                 {
                     Id = route.Id,
-                    DiaDaSemana = route.DiaDaSemana,
+                    DiaDaSemana = (int)route.HoraDoDia.DayOfWeek,
                     HoraDoDia = route.HoraDoDia,
                     Tempo = route.Tempo
                 });
@@ -137,22 +140,58 @@ namespace leta.webApp.Controllers
             else
                 return Json(new { success = false });
         }
+        #endregion
 
+        #region Predição
         public IActionResult Predicao()
         {
+            ViewBag.Qtd = routeTimeRepository.GetAll().Count();
+            var model = infoModeloRepository.GetAll().FirstOrDefault();
+            if (model != null)
+            {
+                ViewBag.DataSet = model.QuantDados;
+                ViewBag.TreinarModel = model.Mensagem;
+            }
+            else
+            {
+                ViewBag.DataSet = string.Empty;
+                ViewBag.TreinarModel = string.Empty;
+            }
             return View();
         }        
         
         public JsonResult TreinarModel()
         {
-            return Json(new { success = true, message = consumeModelBuilder.CreateModel() });
+            var message = consumeModelBuilder.CreateModel();
+            var qtd = routeTimeRepository.GetAll().Count();
+            var novoModel = new Data.Entities.InfoModelo()
+            {
+                Mensagem = message,
+                QuantDados = qtd,
+                UltimoTreinamento = DateTime.Now
+            };
+            var model = infoModeloRepository.GetAll().FirstOrDefault();
+            if (model != null)
+            {
+                model.Update(novoModel);
+                infoModeloRepository.Update(model);
+            }
+            else
+            {
+                infoModeloRepository.Insert(novoModel);
+            }
+
+            if (unitOfWork.Commit() && !string.IsNullOrEmpty(message))
+                return Json(new { success = true, message = message, qtd = qtd });
+            else
+                return Json(new { success = false, message = "Ocorreu algum problema durante a tentativa de Treinar o Modelo." });
         }        
         
         public JsonResult ConsumirModel(RouteTimeViewModel route)
         {
-            return Json(new { success = true, message = routeTimeModel.Predict(route) });
+            return Json(new { success = true, message = Math.Truncate(routeTimeModel.Predict(route).Score) });
         }
-
+        #endregion
         public IActionResult Index()
         {
             return View();
