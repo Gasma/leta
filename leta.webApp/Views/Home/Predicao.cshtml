@@ -7,23 +7,28 @@
     {
         podeTreinar = false;
     }
+    bool.TryParse(ViewBag.ModelExists.ToString(), out bool ModelExists);
 }
 <div class="row">
     <div class="col-md-6" style="border-right:1px solid">
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title">Treinar Modelo</h5>
-                @if (ViewBag.DataSet.ToString() != string.Empty)
+                <p class="card-text" id="msgQtd"></p>
+                <p id="infoModelTreinado" hidden> Clique <button type="button" id="abreModal" class="btn btn-sm btn-primary">aqui</button> para veficar as informações do modelo.</p>
+                <hr />
+                @if (podeTreinar)
                 {
-                    <p class="card-text" id="qtd">Existe um modelo treinado com @ViewBag.DataSet registros.</p>
-                    <p> Clique <button type="button" id="abreModal" class="btn btn-sm btn-primary">aqui</button> para veficar as informações do modelo.</p>
+                    <button id="TreinarModel" class="btn btn-primary">Treinar Modelos</button> <img src="~/ajax-loader.gif" hidden id="CarregaLoaderTreina" />
+                    <div class="mt-4">
+                        <button id="ApagarModel" class="btn btn-danger">Apagar Modelo Existente</button> <img src="~/ajax-loader.gif" hidden id="CarregaLoaderApagarModel" />
+                    </div>
                 }
                 else
                 {
-                    <p class="card-text">Não tem modelos treinados atualmente</p>
+                    <p>Não é possivel treinar modelos, é necessario ao menos @ViewBag.LimiteMinimoTreino registros.</p>
                 }
 
-                <button id="TreinarModel" @(podeTreinar ? null : "disabled" ) class="btn btn-primary">Treinar Modelos</button> <img src="~/ajax-loader.gif" hidden id="CarregaLoaderTreina" />
             </div>
         </div>
     </div>
@@ -31,27 +36,32 @@
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title">Consumir Model</h5>
-                <form id="frmConsumirModel">
-                    <div class="form-group">
-                        <label for="HoraDoDia" class="control-label">Hora do dia</label>
-                        <input type="datetime-local" name="HoraDoDia" id="HoraDoDia" class="form-control" required />
-                        <input type="text" name="id" id="id" hidden />
-                    </div>
-                    <div class="form-group">
-                        <label for="DiaDaSemana" class="control-label">Dia da Semana</label>
-                        <input name="DiaDaSemana" id="DiaDaSemana" type="text" disabled class="form-control" />
-                    </div>
-                    <div class="form-group">
-                        <label for="Tempo" class="control-label">Tempo Previsto</label>
-                        <input disabled name="Tempo" id="Tempo" type="number" min="0" class="form-control" />
-                    </div>
-                    <div class="row pt-3">
-                        <div class="form-group mr-2">
-                            <button type="button" style="float: left;" name="ConsumirModel" id="ConsumirModel" class="btn btn-primary"><i class="fas fa-rocket"></i> Consumir</button> <img src="~/ajax-loader.gif" hidden id="CarregaLoaderConsumir" />
-                            <button type="reset" style="float: right;" value="Limpar" class="btn btn-warning"><i class="fas fa-undo"></i> Limpar</button>
+                <div id="divFrmConsumirModel" @(ModelExists ? null : "hidden")>
+                    <form id="frmConsumirModel">
+                        <div class="form-group row">
+                            <div class="form-group col-6">
+                                <label for="HoraDoDia" class="control-label">Hora do dia</label>
+                                <input type="datetime-local" name="HoraDoDia" id="HoraDoDia" class="form-control" required />
+                                <input type="text" name="id" id="id" hidden />
+                            </div>
+                            <div class="form-group col-6">
+                                <label for="DiaDaSemana" class="control-label">Dia da Semana</label>
+                                <input name="DiaDaSemana" id="DiaDaSemana" type="text" disabled class="form-control btn-normal" />
+                            </div>
                         </div>
-                    </div>
-                </form>
+                        <div class="form-group">
+                            <label for="Tempo" class="control-label mt-2 label-result">Tempo Previsto</label>
+                            <input name="Tempo" id="Tempo" type="number" min="0" disabled class="form-control text-result" />
+                        </div>
+                        <div class="row pt-3">
+                            <div class="form-group mr-2">
+                                <button type="button" style="float: left;" name="ConsumirModel" id="ConsumirModel" class="btn btn-primary"><i class="fas fa-rocket"></i> Consumir</button> <img src="~/ajax-loader.gif" hidden id="CarregaLoaderConsumir" />
+                                <button type="reset" style="float: right;" value="Limpar" class="btn btn-warning"><i class="fas fa-undo"></i> Limpar</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <p id="infoNaoTreina" @(!ModelExists ? null : "hidden" )>Não foram encontrados modelos treinados para consumir.</p>
             </div>
         </div>
     </div>
@@ -70,12 +80,35 @@
 </div>
 @section Scripts {
     <script>
-        preencheModal();
+        var naoTemModelo = 'Não tem modelos treinados atualmente';
+        let existeModelo = (qtd) => {
+            return 'Existe um modelo treinado com ' + qtd + ' registros.';
+        };
+        let setTextoQtd = (texto = '') => {
+            if (texto == '') {
+                $('#msgQtd').text(naoTemModelo);
+            }
+            else {
+                $('#msgQtd').text(texto);
+            }
+        };
+        function populaQtd() {
+            var DataSetQtd = @ViewBag.DataSet;
+            if (DataSetQtd == 0) {
+                setTextoQtd(naoTemModelo);
+            }
+            else {
+                setTextoQtd(existeModelo(DataSetQtd));
+                $('#infoModelTreinado').prop('hidden', false);
+            }
+        }
         function preencheModal() {
             var texto = '@(ViewBag.TreinarModel)';
             if (texto != '')
                 $("#Aplicatexto").html(convertText(texto));
         }
+        preencheModal();
+        populaQtd();
         function convertText(texto) {
             var resultado = texto.split('#');
             var final = "";
@@ -95,12 +128,34 @@
                         $("#Aplicatexto").html(convertText(data.message));
                         $("#modalInfoTreinamento").modal("show");
                         $("#CarregaLoaderTreina").prop("hidden", true);
-                        var texto = "Existe um modelo treinado com " + data.qtd + " registros.";
-                        $("#qtd").text(texto);
+                        setTextoQtd(existeModelo(data.qtd));
+                        $("#divFrmConsumirModel").prop("hidden", false);
+                        $("#infoNaoTreina").prop("hidden", true);
+                        $('#infoModelTreinado').prop('hidden', false);
                     }
                 },
                 error: () => {
                     $("#CarregaLoaderTreina").prop("hidden", true);
+                }
+            });
+        });
+        $("#ApagarModel").on("click", function () {
+            $("#CarregaLoaderApagarModel").prop("hidden", false);
+            $.ajax({
+                type: "POST",
+                url: "/Home/ApagarModel",
+                dataType: 'json',
+                success: (data) => {
+                    if (data.success) {
+                        $("#CarregaLoaderApagarModel").prop("hidden", true);
+                        $("#divFrmConsumirModel").prop("hidden", true);
+                        $("#infoNaoTreina").prop("hidden", false);
+                        $("#infoModelTreinado").prop("hidden", true);
+                        setTextoQtd();
+                    }
+                },
+                error: () => {
+                    $("#CarregaLoaderApagarModel").prop("hidden", true);
                 }
             });
         });

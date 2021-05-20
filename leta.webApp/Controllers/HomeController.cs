@@ -1,10 +1,12 @@
-﻿using leta.Application.RouteTimeModel;
+﻿using leta.Application.Helper;
+using leta.Application.RouteTimeTrainModel;
 using leta.Application.ViewModels;
 using leta.Data.Repository;
 using leta.Data.UoW;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System;
 using System.Diagnostics;
@@ -18,16 +20,19 @@ namespace leta.webApp.Controllers
         private readonly ILogger<HomeController> logger;
         private readonly IRouteTimeRepository routeTimeRepository;
         private readonly IUnitOfWork unitOfWork;
-        private readonly IRouteTimeModel routeTimeModel;
-        private readonly IConsumeModelBuilder consumeModelBuilder;
+        private readonly IRouteTimeConsumer routeTimeModel;
+        private readonly IRouteTimeModelBuilder consumeModelBuilder;
         private readonly IInfoModeloRepository infoModeloRepository;
+        private string pathModeloTreinado;
+        private int limiteMinimoTreino;
 
         public HomeController(ILogger<HomeController> logger,
             IRouteTimeRepository routeTimeRepository,
             IUnitOfWork unitOfWork,
-            IRouteTimeModel routeTimeModel,
-            IConsumeModelBuilder consumeModelBuilder,
-            IInfoModeloRepository infoModeloRepository)
+            IRouteTimeConsumer routeTimeModel,
+            IRouteTimeModelBuilder consumeModelBuilder,
+            IInfoModeloRepository infoModeloRepository,
+            IOptions<AppSettings> appSettings)
         {
             this.logger = logger;
             this.routeTimeRepository = routeTimeRepository;
@@ -35,6 +40,8 @@ namespace leta.webApp.Controllers
             this.unitOfWork = unitOfWork;
             this.routeTimeModel = routeTimeModel;
             this.consumeModelBuilder = consumeModelBuilder;
+            pathModeloTreinado = Path.GetFullPath(appSettings.Value.TrainedModelPath);
+            limiteMinimoTreino = appSettings.Value.LimiteMinimoTreino;
         }
 
         #region Adiciona Dados
@@ -47,7 +54,7 @@ namespace leta.webApp.Controllers
         {
             var dados = routeTimeRepository
                 .GetAll()
-                .Select(a => new { a.Id, HoraDoDia = a.HoraDoDia.ToString("dd/MM/yyyy HH:mm"), DiaDaSemana = ((DiaSemana)a.DiaDaSemana).ToDescription(), a.Tempo });
+                .Select(a => new { a.Id, HoraDoDia = a.HoraDoDia.ToString("dd/MM/yyyy HH:mm"), DiaDaSemana = ((DiaSemana)a.HoraDoDia.DayOfWeek).ToDescription(), a.Tempo });
 
             return Json(new { data = dados });
         }
@@ -59,7 +66,6 @@ namespace leta.webApp.Controllers
             {
                 routeTimeRepository.Insert(new Data.RouteTime()
                 {
-                    DiaDaSemana = (int)route.HoraDoDia.DayOfWeek,
                     HoraDoDia = route.HoraDoDia,
                     Tempo = route.Tempo
                 });
@@ -69,7 +75,6 @@ namespace leta.webApp.Controllers
                 routeTimeRepository.Update(new Data.RouteTime()
                 {
                     Id = route.Id,
-                    DiaDaSemana = (int)route.HoraDoDia.DayOfWeek,
                     HoraDoDia = route.HoraDoDia,
                     Tempo = route.Tempo
                 });
@@ -130,7 +135,6 @@ namespace leta.webApp.Controllers
                         routeTimeRepository.Insert(new Data.RouteTime()
                         {
                             HoraDoDia = data,
-                            DiaDaSemana = (int)values[1].ParseToEnumDiaSemana(),
                             Tempo = tempo,
                         });
                     }
@@ -145,7 +149,10 @@ namespace leta.webApp.Controllers
         #region Predição
         public IActionResult Predicao()
         {
-            ViewBag.Qtd = routeTimeRepository.GetAll().Count();
+            var qtdAuxiliar = routeTimeRepository.GetAll().Count();
+            ViewBag.Qtd = (qtdAuxiliar >= limiteMinimoTreino) ? qtdAuxiliar : 0;
+            ViewBag.LimiteMinimoTreino = limiteMinimoTreino;
+            ViewBag.ModelExists = System.IO.File.Exists(pathModeloTreinado);
             var model = infoModeloRepository.GetAll().FirstOrDefault();
             if (model != null)
             {
@@ -154,12 +161,24 @@ namespace leta.webApp.Controllers
             }
             else
             {
-                ViewBag.DataSet = string.Empty;
+                ViewBag.DataSet = 0;
                 ViewBag.TreinarModel = string.Empty;
             }
             return View();
         }        
         
+        public JsonResult ApagarModel()
+        {
+            System.IO.File.Delete(pathModeloTreinado);
+            var model = infoModeloRepository.GetAll().FirstOrDefault();
+            infoModeloRepository.Delete(model);
+            if (unitOfWork.Commit())
+                return Json(new { success = true });
+            else
+                return Json(new { success = false });
+        }
+
+        [HttpPost]
         public JsonResult TreinarModel()
         {
             var message = consumeModelBuilder.CreateModel();
@@ -185,8 +204,9 @@ namespace leta.webApp.Controllers
                 return Json(new { success = true, message = message, qtd = qtd });
             else
                 return Json(new { success = false, message = "Ocorreu algum problema durante a tentativa de Treinar o Modelo." });
-        }        
-        
+        }
+
+        [HttpPost]
         public JsonResult ConsumirModel(RouteTimeViewModel route)
         {
             return Json(new { success = true, message = Math.Truncate(routeTimeModel.Predict(route).Score) });

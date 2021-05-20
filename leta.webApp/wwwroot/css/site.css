@@ -73,3 +73,19 @@ body {
 .button-center {
     text-align: center;
 }
+
+.btn-normal {
+    background-color: #fff !important;
+}
+.label-result {
+    text-align: center;
+    width: 100%;
+    font-size: 16px;
+    font-weight:bold;
+}
+.text-result {
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+    background-color: #a4d4ef;
+}
