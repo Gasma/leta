@@ -9,6 +9,6 @@ namespace leta.Data
         {
         }
         public DbSet<RouteTime> RouteTime { get; set; }
-        public DbSet<InfoModelo> InfoModelo { get; set; }
+        public DbSet<InfoModel> InfoModel { get; set; }
     }
 }

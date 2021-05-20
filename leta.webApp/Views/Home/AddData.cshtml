@@ -148,7 +148,7 @@
             $("#HoraDoDia").change();
             $("#Tempo").val(data.tempo);
         });
-        $("#SalvaRegistroUnico").on("click", function () {
+        $("#SalvaRegistroUnico").on("click", () => {
             if (validar("#addRegistroUnico")) {
                 var disabled = $("#addRegistroUnico").find(':input:disabled').removeAttr('disabled');
                 $.ajax({
@@ -156,7 +156,7 @@
                     url: "/Home/SalvaUnicoRegistro",
                     dataType: 'json',
                     data: $("#addRegistroUnico").serialize(),
-                    success: function (data) {
+                    success: (data) => {
                         if (data.success) {
                             tabela.ajax.reload();
                             $("#addRegistroUnico").trigger("reset");
@@ -166,7 +166,7 @@
                 disabled.attr('disabled', 'disabled');
             }
         });
-        $("#Apagar").on("click", function () {
+        $("#Apagar").on("click", () => {
             if ($("#id").val() != '') {
 
                 $.ajax({

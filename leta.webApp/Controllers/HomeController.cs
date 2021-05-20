@@ -183,7 +183,7 @@ namespace leta.webApp.Controllers
         {
             var message = consumeModelBuilder.CreateModel();
             var qtd = routeTimeRepository.GetAll().Count();
-            var novoModel = new Data.Entities.InfoModelo()
+            var novoModel = new Data.Entities.InfoModel()
             {
                 Mensagem = message,
                 QuantDados = qtd,

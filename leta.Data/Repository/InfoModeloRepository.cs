@@ -2,7 +2,7 @@
 
 namespace leta.Data.Repository
 {
-    public class InfoModeloRepository : BaseRepository<InfoModelo, int>, IInfoModeloRepository
+    public class InfoModeloRepository : BaseRepository<InfoModel, int>, IInfoModeloRepository
     {
         public InfoModeloRepository(LetaAppDbContext context) : base(context)
         {

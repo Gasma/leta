@@ -2,7 +2,7 @@
 
 namespace leta.Data.Repository
 {
-    public interface IInfoModeloRepository : IBaseRepository<InfoModelo, int>
+    public interface IInfoModeloRepository : IBaseRepository<InfoModel, int>
     {
     }
 }

@@ -2,9 +2,9 @@
 
 namespace leta.Data.Entities
 {
-    public class InfoModelo : Entity<int>
+    public class InfoModel : Entity<int>
     {
-        public void Update(InfoModelo info)
+        public void Update(InfoModel info)
         {
             Update(info. Mensagem, info.UltimoTreinamento, info.QuantDados);
         }        
