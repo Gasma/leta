@@ -8,8 +8,6 @@ namespace leta.Data
 
         public DateTime HoraDoDia { get; set; }
 
-        public int DiaDaSemana { get; set; }
-
         public float Tempo { get; set; }
 
     }
