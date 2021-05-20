@@ -6,14 +6,14 @@ using Microsoft.ML;
 using System;
 using System.IO;
 
-namespace leta.Application.RouteTimeModel
+namespace leta.Application.RouteTimeTrainModel
 {
-    public class RouteTimeModel : IRouteTimeModel
+    public class RouteTimeConsumer : IRouteTimeConsumer
     {
         private Lazy<PredictionEngine<RouteTimeModelInput, RouteTimeModelOutput>> PredictionEngine;
 
         public string MLNetModelPath;
-        public RouteTimeModel(IOptions<AppSettings> appSettings)
+        public RouteTimeConsumer(IOptions<AppSettings> appSettings)
         {
             this.MLNetModelPath = Path.GetFullPath(appSettings.Value.TrainedModelPath);
         }

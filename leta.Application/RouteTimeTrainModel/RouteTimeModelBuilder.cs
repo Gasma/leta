@@ -9,16 +9,16 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace leta.Application.RouteTimeModel
+namespace leta.Application.RouteTimeTrainModel
 {
-    public class ConsumeModelBuilder : IConsumeModelBuilder
+    public class RouteTimeModelBuilder : IRouteTimeModelBuilder
     {
         private readonly IRouteTimeRepository routeTimeRepository;
         private readonly string MODEL_FILE;
         private MLContext mlContext;
         private StringBuilder message;
 
-        public ConsumeModelBuilder(IRouteTimeRepository routeTimeRepository, IOptions<AppSettings> appSettings)
+        public RouteTimeModelBuilder(IRouteTimeRepository routeTimeRepository, IOptions<AppSettings> appSettings)
         {
             mlContext = new MLContext(seed: 1);
             MODEL_FILE = Path.GetFullPath(appSettings.Value.TrainedModelPath);
@@ -32,7 +32,7 @@ namespace leta.Application.RouteTimeModel
             var dataset = routeTimeRepository.GetAll().Select(a => new RouteTimeModelInput()
             {
                 Ano = int.TryParse(a.HoraDoDia.ToString("yy"), out int ano) ? ano : 0,
-                DiaSemana = a.DiaDaSemana,
+                DiaSemana = (int)a.HoraDoDia.DayOfWeek,
                 Hora = a.HoraDoDia.Hour,
                 Mes = int.TryParse(a.HoraDoDia.ToString("MM"), out int mes) ? mes : 0,
                 Tempo = a.Tempo
@@ -86,7 +86,7 @@ namespace leta.Application.RouteTimeModel
 
         public string GetAbsolutePath(string relativePath)
         {
-            FileInfo _dataRoot = new FileInfo(typeof(ConsumeModelBuilder).Assembly.Location);
+            FileInfo _dataRoot = new FileInfo(typeof(RouteTimeModelBuilder).Assembly.Location);
             string assemblyFolderPath = _dataRoot.Directory.FullName;
 
             string fullPath = Path.Combine(assemblyFolderPath, relativePath);

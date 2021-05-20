@@ -1,9 +1,9 @@
 ﻿using leta.Application.MLModels;
 using leta.Application.ViewModels;
 
-namespace leta.Application.RouteTimeModel
+namespace leta.Application.RouteTimeTrainModel
 {
-    public interface IRouteTimeModel
+    public interface IRouteTimeConsumer
     {
         RouteTimeModelOutput Predict(RouteTimeViewModel input);
     }
