@@ -10,8 +10,20 @@
     return aux;
 }
 function bloqueia(campo) {
+    var message = '';
+
+    switch (campo.prop("name")) {
+        case 'HoraDoDia':
+            message = 'Necessário informar a data e a hora do registro.';
+            break;
+        case 'Arquivo':
+            message = 'Nenhum arquivo foi selecionado. Lembre-se que precisa ser um CSV.';
+            break;
+        default:
+            message = 'Preencha este campo.'
+    }        
     campo.attr('data-toggle', 'tooltip')
-        .attr('title', 'Preencha este campo.')
+        .attr('title', message)
         .tooltip({
             trigger: 'manual'
         })
