@@ -6,8 +6,8 @@ namespace leta.Application.ViewModels
     {
         public int Id { get; set; }
 
-        public DateTime HoraDoDia { get; set; }
+        public DateTime TimeOfDay { get; set; }
 
-        public float Tempo { get; set; }
+        public float Time { get; set; }
     }
 }

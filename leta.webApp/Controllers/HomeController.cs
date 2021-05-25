@@ -41,7 +41,7 @@ namespace leta.webApp.Controllers
             this.routeTimeModel = routeTimeModel;
             this.consumeModelBuilder = consumeModelBuilder;
             pathModeloTreinado = Path.GetFullPath(appSettings.Value.TrainedModelPath);
-            limiteMinimoTreino = appSettings.Value.LimiteMinimoTreino;
+            limiteMinimoTreino = appSettings.Value.MinimalTrainLimit;
         }
 
         #region Adiciona Dados
@@ -54,7 +54,7 @@ namespace leta.webApp.Controllers
         {
             var dados = routeTimeRepository
                 .GetAll()
-                .Select(a => new { a.Id, HoraDoDia = a.HoraDoDia.ToString("dd/MM/yyyy HH:mm"), DiaDaSemana = ((DiaSemana)a.HoraDoDia.DayOfWeek).ToDescription(), a.Tempo });
+                .Select(a => new { a.Id, HoraDoDia = a.TimeOfDay.ToString("dd/MM/yyyy HH:mm"), DiaDaSemana = ((DiaSemana)a.TimeOfDay.DayOfWeek).ToDescription(), a.Time });
 
             return Json(new { data = dados });
         }
@@ -66,8 +66,8 @@ namespace leta.webApp.Controllers
             {
                 routeTimeRepository.Insert(new Data.RouteTime()
                 {
-                    HoraDoDia = route.HoraDoDia,
-                    Tempo = route.Tempo
+                    TimeOfDay = route.TimeOfDay,
+                    Time = route.Time
                 });
             }
             else
@@ -75,8 +75,8 @@ namespace leta.webApp.Controllers
                 routeTimeRepository.Update(new Data.RouteTime()
                 {
                     Id = route.Id,
-                    HoraDoDia = route.HoraDoDia,
-                    Tempo = route.Tempo
+                    TimeOfDay = route.TimeOfDay,
+                    Time = route.Time
                 });
             }
 
@@ -134,8 +134,8 @@ namespace leta.webApp.Controllers
                     {
                         routeTimeRepository.Insert(new Data.RouteTime()
                         {
-                            HoraDoDia = data,
-                            Tempo = tempo,
+                            TimeOfDay = data,
+                            Time = tempo,
                         });
                     }
                 }
@@ -156,8 +156,8 @@ namespace leta.webApp.Controllers
             var model = infoModeloRepository.GetAll().FirstOrDefault();
             if (model != null)
             {
-                ViewBag.DataSet = model.QuantDados;
-                ViewBag.TreinarModel = model.Mensagem;
+                ViewBag.DataSet = model.QuantData;
+                ViewBag.TreinarModel = model.Message;
             }
             else
             {
@@ -185,9 +185,9 @@ namespace leta.webApp.Controllers
             var qtd = routeTimeRepository.GetAll().Count();
             var novoModel = new Data.Entities.InfoModel()
             {
-                Mensagem = message,
-                QuantDados = qtd,
-                UltimoTreinamento = DateTime.Now
+                Message = message,
+                QuantData = qtd,
+                LastTraining = DateTime.Now
             };
             var model = infoModeloRepository.GetAll().FirstOrDefault();
             if (model != null)

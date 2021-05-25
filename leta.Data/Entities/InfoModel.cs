@@ -6,17 +6,17 @@ namespace leta.Data.Entities
     {
         public void Update(InfoModel info)
         {
-            Update(info. Mensagem, info.UltimoTreinamento, info.QuantDados);
+            Update(info. Message, info.LastTraining, info.QuantData);
         }        
         
-        public void Update(string Mensagem, DateTime? UltimoTreinamento, int QuantDados)
+        public void Update(string Message, DateTime? LastTraining, int QuantData)
         {
-            this.Mensagem = Mensagem;
-            this.UltimoTreinamento = UltimoTreinamento;
-            this.QuantDados = QuantDados;
+            this.Message = Message;
+            this.LastTraining = LastTraining;
+            this.QuantData = QuantData;
         }
-        public string Mensagem { get; set; }
-        public DateTime? UltimoTreinamento { get; set; }
-        public int QuantDados { get; set; }
+        public string Message { get; set; }
+        public DateTime? LastTraining { get; set; }
+        public int QuantData { get; set; }
     }
 }

@@ -31,11 +31,11 @@ namespace leta.Application.RouteTimeTrainModel
             var dados = routeTimeRepository.GetAll();
             var dataset = routeTimeRepository.GetAll().Select(a => new RouteTimeModelInput()
             {
-                Ano = int.TryParse(a.HoraDoDia.ToString("yy"), out int ano) ? ano : 0,
-                DiaSemana = (int)a.HoraDoDia.DayOfWeek,
-                Hora = a.HoraDoDia.Hour,
-                Mes = int.TryParse(a.HoraDoDia.ToString("MM"), out int mes) ? mes : 0,
-                Tempo = a.Tempo
+                Year = int.TryParse(a.TimeOfDay.ToString("yy"), out int ano) ? ano : 0,
+                WeekDay = (int)a.TimeOfDay.DayOfWeek,
+                Hour = a.TimeOfDay.Hour,
+                Month = int.TryParse(a.TimeOfDay.ToString("MM"), out int mes) ? mes : 0,
+                Time = a.Time
             });
             // Load Data
             IDataView trainingDataView = mlContext.Data.LoadFromEnumerable(dataset);
@@ -58,9 +58,9 @@ namespace leta.Application.RouteTimeTrainModel
         public IEstimator<ITransformer> BuildTrainingPipeline(MLContext mlContext)
         {
             // Data process configuration with pipeline data transformations 
-            var dataProcessPipeline = mlContext.Transforms.Concatenate("Features", new[] { "Ano", "DiaSemana", "Hora", "Mes" });
+            var dataProcessPipeline = mlContext.Transforms.Concatenate("Features", new[] { "Year", "WeekDay", "Hour", "Month" });
             // Set the training algorithm 
-            var trainer = mlContext.Regression.Trainers.FastTreeTweedie(labelColumnName: @"Tempo", featureColumnName: "Features");
+            var trainer = mlContext.Regression.Trainers.FastTreeTweedie(labelColumnName: @"Time", featureColumnName: "Features");
 
             return dataProcessPipeline.Append(trainer);
         }
@@ -74,7 +74,7 @@ namespace leta.Application.RouteTimeTrainModel
         {
             // Cross-Validate with single dataset (since we don't have two datasets, one for training and for evaluate)
             // in order to evaluate and get the model's accuracy metrics
-            var crossValidationResults = mlContext.Regression.CrossValidate(trainingDataView, trainingPipeline, numberOfFolds: 5, labelColumnName: "Tempo");
+            var crossValidationResults = mlContext.Regression.CrossValidate(trainingDataView, trainingPipeline, numberOfFolds: 5, labelColumnName: "Time");
             PrintRegressionFoldsAverageMetrics(crossValidationResults);
         }
 
