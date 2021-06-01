@@ -24,11 +24,11 @@ namespace leta.Application.RouteTimeTrainModel
         {
             var input = new RouteTimeModelInput()
             {
-                Year = int.TryParse(viewModel.TimeOfDay.ToString("yy"), out int ano) ? ano : 0,
-                WeekDay = (int)viewModel.TimeOfDay.DayOfWeek,
-                Hour = viewModel.TimeOfDay.Hour,
-                Month = int.TryParse(viewModel.TimeOfDay.ToString("MM"), out int mes) ? mes : 0,
-                Time = viewModel.Time
+                Year = int.TryParse(viewModel.HoraDoDia.ToString("yy"), out int ano) ? ano : 0,
+                WeekDay = (int)viewModel.HoraDoDia.DayOfWeek,
+                Hour = viewModel.HoraDoDia.Hour,
+                Month = int.TryParse(viewModel.HoraDoDia.ToString("MM"), out int mes) ? mes : 0,
+                Time = viewModel.Tempo
             };
             RouteTimeModelOutput result;
             try

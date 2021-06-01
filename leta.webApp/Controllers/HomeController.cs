@@ -54,7 +54,7 @@ namespace leta.webApp.Controllers
         {
             var dados = routeTimeRepository
                 .GetAll()
-                .Select(a => new { a.Id, HoraDoDia = a.TimeOfDay.ToString("dd/MM/yyyy HH:mm"), DiaDaSemana = ((DiaSemana)a.TimeOfDay.DayOfWeek).ToDescription(), a.Time });
+                .Select(a => new { a.Id, HoraDoDia = a.TimeOfDay.ToString("dd/MM/yyyy HH:mm"), DiaDaSemana = ((DiaSemana)a.TimeOfDay.DayOfWeek).ToDescription(), Tempo = a.Time });
 
             return Json(new { data = dados });
         }
@@ -66,8 +66,8 @@ namespace leta.webApp.Controllers
             {
                 routeTimeRepository.Insert(new Data.RouteTime()
                 {
-                    TimeOfDay = route.TimeOfDay,
-                    Time = route.Time
+                    TimeOfDay = route.HoraDoDia,
+                    Time = route.Tempo
                 });
             }
             else
@@ -75,8 +75,8 @@ namespace leta.webApp.Controllers
                 routeTimeRepository.Update(new Data.RouteTime()
                 {
                     Id = route.Id,
-                    TimeOfDay = route.TimeOfDay,
-                    Time = route.Time
+                    TimeOfDay = route.HoraDoDia,
+                    Time = route.Tempo
                 });
             }
 

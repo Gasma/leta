@@ -1,4 +1,4 @@
-﻿<h4>Adiciona Registros</h4>
+﻿<h4>Predição do Trânsito</h4>
 <hr />
 @{
     int.TryParse(ViewBag.Qtd.ToString(), out int qtd);
@@ -20,14 +20,14 @@
                 @if (podeTreinar)
                 {
                     <button id="TreinarModel" class="btn btn-primary">Treinar Modelos</button> <img src="~/ajax-loader.gif" hidden id="CarregaLoaderTreina" />
-                    <div class="mt-4">
-                        <button id="ApagarModel" class="btn btn-danger">Apagar Modelo Existente</button> <img src="~/ajax-loader.gif" hidden id="CarregaLoaderApagarModel" />
-                    </div>
                 }
                 else
                 {
                     <p>Não é possivel treinar modelos, é necessario ao menos @ViewBag.LimiteMinimoTreino registros.</p>
                 }
+                    <div class="mt-4">
+                        <button id="ApagarModel" hidden class="btn btn-danger">Apagar Modelo Existente</button> <img src="~/ajax-loader.gif" hidden id="CarregaLoaderApagarModel" />
+                    </div>
 
             </div>
         </div>
@@ -100,6 +100,7 @@
             else {
                 setTextoQtd(existeModelo(DataSetQtd));
                 $('#infoModelTreinado').prop('hidden', false);
+                $('#ApagarModel').prop('hidden', false);
             }
         }
         function preencheModal() {
@@ -132,6 +133,7 @@
                         $("#divFrmConsumirModel").prop("hidden", false);
                         $("#infoNaoTreina").prop("hidden", true);
                         $('#infoModelTreinado').prop('hidden', false);
+                        $('#ApagarModel').prop('hidden', false);
                     }
                 },
                 error: () => {
@@ -151,6 +153,7 @@
                         $("#divFrmConsumirModel").prop("hidden", true);
                         $("#infoNaoTreina").prop("hidden", false);
                         $("#infoModelTreinado").prop("hidden", true);
+                        $("#ApagarModel").prop("hidden", true);
                         setTextoQtd();
                     }
                 },
