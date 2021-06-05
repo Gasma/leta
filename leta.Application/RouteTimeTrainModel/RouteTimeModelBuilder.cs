@@ -58,7 +58,8 @@ namespace leta.Application.RouteTimeTrainModel
         public IEstimator<ITransformer> BuildTrainingPipeline(MLContext mlContext)
         {
             // Data process configuration with pipeline data transformations 
-            var dataProcessPipeline = mlContext.Transforms.Concatenate("Features", new[] { "Year", "WeekDay", "Hour", "Month" });
+            var dataProcessPipeline = mlContext.Transforms.Categorical.OneHotHashEncoding(new[] { new InputOutputColumnPair("Month", "Month"), new InputOutputColumnPair("WeekDay", "WeekDay"), new InputOutputColumnPair("Year", "Year") })
+                          .Append(mlContext.Transforms.Concatenate("Features", new[] { "Month", "WeekDay", "Year", "Hour" }));
             // Set the training algorithm 
             var trainer = mlContext.Regression.Trainers.FastTreeTweedie(labelColumnName: @"Time", featureColumnName: "Features");
 

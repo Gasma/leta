@@ -9,8 +9,8 @@ using leta.Data;
 namespace leta.Data.Migrations
 {
     [DbContext(typeof(LetaAppDbContext))]
-    [Migration("20210517222214_CriaInfoModel")]
-    partial class CriaInfoModel
+    [Migration("20210605175425_InitialMigration")]
+    partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -19,24 +19,24 @@ namespace leta.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 64)
                 .HasAnnotation("ProductVersion", "5.0.6");
 
-            modelBuilder.Entity("leta.Data.Entities.InfoModelo", b =>
+            modelBuilder.Entity("leta.Data.Entities.InfoModel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<string>("Mensagem")
+                    b.Property<DateTime?>("LastTraining")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Message")
                         .HasColumnType("longtext");
 
-                    b.Property<int>("QuantDados")
+                    b.Property<int>("QuantData")
                         .HasColumnType("int");
-
-                    b.Property<DateTime?>("UltimoTreinamento")
-                        .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("InfoModelo");
+                    b.ToTable("InfoModel");
                 });
 
             modelBuilder.Entity("leta.Data.RouteTime", b =>
@@ -45,14 +45,11 @@ namespace leta.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("DiaDaSemana")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("HoraDoDia")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<float>("Tempo")
+                    b.Property<float>("Time")
                         .HasColumnType("float");
+
+                    b.Property<DateTime>("TimeOfDay")
+                        .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
 
