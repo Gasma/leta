@@ -116,7 +116,7 @@ namespace leta.Application.RouteTimeTrainModel
             var lossFunction = crossValidationResults.Select(r => r.Metrics.LossFunction);
             var R2 = crossValidationResults.Select(r => r.Metrics.RSquared);
 
-            message.Append($"*       Metrics for Regression model      #");
+            message.Append($"*       Resultados dos testes do Modelo      #");
             message.Append($"*       Average L1 Loss:       {L1.Average():0.###} #");
             message.Append($"*       Average L2 Loss:       {L2.Average():0.###}  #");
             message.Append($"*       Average RMS:           {RMS.Average():0.###}  #");
