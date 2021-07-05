@@ -116,12 +116,11 @@ namespace leta.Application.RouteTimeTrainModel
             var lossFunction = crossValidationResults.Select(r => r.Metrics.LossFunction);
             var R2 = crossValidationResults.Select(r => r.Metrics.RSquared);
 
-            message.Append($"*       Metrics for Regression model      #");
-            message.Append($"*       Average L1 Loss:       {L1.Average():0.###} #");
-            message.Append($"*       Average L2 Loss:       {L2.Average():0.###}  #");
-            message.Append($"*       Average RMS:           {RMS.Average():0.###}  #");
-            message.Append($"*       Average Loss Function: {lossFunction.Average():0.###}  #");
-            message.Append($"*       Average R-squared:     {R2.Average():0.###}  #");
+            message.Append($"*       Erro médio absoluto:   {L1.Average():0.###} (ele é a magnitude media dos erros e mede a precisão para variáveis continuas)#");
+            message.Append($"*       Erro quadrático médio: {L2.Average():0.###} (se refere a média da diferença quadrática entre Y (parâmetro predito) e as variáveis X (parâmetros observados).) #");
+            message.Append($"*       Erro quadrático médio: {RMS.Average():0.###} (é o desvio padrão dos resíduos (erros de previsão).Resíduos são uma medida de quão longe os pontos de dados da linha de regressão estão. ) #");
+            message.Append($"*       Funções de perda:      {lossFunction.Average():0.###} (é uma medida de quão bom é um modelo de previsão em termos de ser capaz de prever o resultado esperado) #");
+            message.Append($"*       R-quadrado:            {R2.Average():0.###}  (é uma medida estatística de ajuste que indica quanta variação de uma variável dependente é explicada pelas variáveis independentes)#");
         }
     }
 }
